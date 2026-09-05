@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balon Temizleyici</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>💬 Balon Temizleyici</h1>
+      <p class="subtitle">Konuşma balonlarının içindeki yazıları otomatik bulup siler; balonun rengini ve şeklini korur.</p>
+    </header>
+
+    <section class="panel">
+      <div class="options">
+        <div class="opt-group lang-grid">
+          <span class="opt-label">Dil(ler)</span>
+          <div class="lang-checkboxes">
+          {% for code, (tess, easy, label) in languages.items() %}
+            <label><input type="checkbox" name="lang" value="{{ code }}" {% if code == default_lang %}checked{% endif %}> {{ label }}</label>
+          {% endfor %}
+          </div>
+        </div>
+        <div class="hint-small">Birden fazla dil işaretleyebilirsiniz.</div>
+        {% if not easyocr_available %}
+        <div class="warn">
+          ⚠️ EasyOCR kurulu değil, Tesseract kullanılıyor.
+        </div>
+        {% endif %}
+      </div>
+
+      <div id="dropzone" class="dropzone">
+        <div class="dz-icon">📥</div>
+        <div>Resimleri buraya sürükleyin ya da <label class="pick-link">seç<input type="file" id="fileInput" multiple accept="image/*" hidden></label></div>
+        <div class="dz-hint">Birden fazla resim aynı anda yüklenebilir</div>
+      </div>
+
+      <div id="queueInfo" class="queue-info hidden"></div>
+      <button id="processBtn" class="primary-btn" disabled>Balonları Temizle</button>
+    </section>
+
+    <section id="results" class="results hidden">
+      <div class="results-header">
+        <h2>Sonuçlar</h2>
+        <button id="downloadAllBtn" class="secondary-btn">Tümünü İndir (ZIP)</button>
+      </div>
+      <div id="grid" class="grid"></div>
+    </section>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
